@@ -82,19 +82,6 @@ Puis ouvrez `notebooks/00-data-exploration.ipynb`.
 - `.env-example` : modèle de configuration
 - `.gitignore` : fichiers à ignorer dans Git
 
-## Bonnes pratiques
-
-- Ne versionnez jamais votre environnement virtuel (`.venv`) ou les données volumineuses.
-- Utilisez `.env` pour les paramètres locaux et ne le partagez pas.
-- Ajoutez des tests et des scripts de validation dès que possible.
-- Documentez chaque étape de votre pipeline pour faciliter la maintenance.
-
-## Notes
-
-- Le service applicatif Docker n'est pas encore développé : le projet est actuellement conçu pour un développement local.
-- Vous pouvez compléter `scripts/ingest_data.py` pour lire réellement depuis MinIO avec `spark.read.csv()` ou `spark.read.format("csv")`.
-- Le notebook `notebooks/00-data-exploration.ipynb` est le meilleur point de départ pour analyser vos données.
-
 ## Arrêter les services
 
 ```bash
