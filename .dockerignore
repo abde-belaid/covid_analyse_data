@@ -1,0 +1,12 @@
+.git
+.gitignore
+.env.local
+.ipynb_checkpoints
+__pycache__
+*.pyc
+*.pyo
+.pytest_cache
+docker/minio/data
+notebooks
+README.md
+.vscode
