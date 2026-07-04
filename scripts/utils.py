@@ -3,18 +3,27 @@ from dotenv import load_dotenv
 import os
 
 
+def _require_env(key: str) -> str:
+    value = os.getenv(key)
+    if not value:
+        raise EnvironmentError(f"Missing required environment variable: {key}")
+    return value
+
+
 def load_env() -> dict:
     env_path = Path(".env")
     if env_path.exists():
         load_dotenv(dotenv_path=env_path)
 
     return {
-        "MINIO_ROOT_USER": os.getenv("MINIO_ROOT_USER", "minioadmin"),
-        "MINIO_ROOT_PASSWORD": os.getenv("MINIO_ROOT_PASSWORD", "minioadmin"),
-        "MINIO_BUCKET_BRONZE": os.getenv("MINIO_BUCKET_BRONZE", "bronze"),
-        "MINIO_BUCKET_SILVER": os.getenv("MINIO_BUCKET_SILVER", "silver"),
-        "MINIO_BUCKET_GOLD": os.getenv("MINIO_BUCKET_GOLD", "gold"),
-        "MINIO_HOST": os.getenv("MINIO_HOST", "localhost"),
-        "MINIO_PORT": os.getenv("MINIO_PORT", "9000"),
-        "SPARK_APP_NAME": os.getenv("SPARK_APP_NAME", "CovidDataAnalysis"),
+        "MINIO_ROOT_USER": _require_env("MINIO_ROOT_USER"),
+        "MINIO_ROOT_PASSWORD": _require_env("MINIO_ROOT_PASSWORD"),
+        "MINIO_BUCKET_BRONZE": _require_env("MINIO_BUCKET_BRONZE"),
+        "MINIO_BUCKET_SILVER": _require_env("MINIO_BUCKET_SILVER"),
+        "MINIO_BUCKET_GOLD": _require_env("MINIO_BUCKET_GOLD"),
+        "MINIO_HOST": _require_env("MINIO_HOST"),
+        "MINIO_PORT": _require_env("MINIO_PORT"),
+        "SPARK_APP_NAME": _require_env("SPARK_APP_NAME"),
+        "COVID_DATA_URL": os.getenv("COVID_DATA_URL"),
+        "COVID_DATA_FILE": os.getenv("COVID_DATA_FILE"),
     }

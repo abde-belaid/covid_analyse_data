@@ -7,7 +7,7 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from scripts.minio_utils import create_buckets
-from scripts.ingest_data import ingest_covid_data
+from scripts.ingest_data import ingest_bronze_data
 from scripts.process_data import run_processing_pipeline
 
 def main():
@@ -20,7 +20,7 @@ def main():
         create_buckets()
         
         print("\n[Step 2] Ingesting data to Bronze layer...")
-        ingest_covid_data()
+        ingest_bronze_data()
         
         print("\n[Step 3] Processing data (Bronze -> Silver -> Gold)...")
         run_processing_pipeline()
