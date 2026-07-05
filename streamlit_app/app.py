@@ -17,14 +17,15 @@ def main():
     Bienvenue dans ce Dashboard interactif dédié à l'analyse de l'impact du **COVID-19** à travers le monde.
     
     À partir de données massives collectées quotidiennement, nettoyées et agrégées dans notre *Data Lake (Architecture Medallion)*, cette application vous propose de plonger au cœur des chiffres pour comprendre :
-    - Comment le virus s'est propagé.
-    - Quel a été l'impact de la campagne de vaccination mondiale.
-    - Comment le **Maroc** a géré cette crise de manière spécifique.
+    - Comment le virus s'est propagé à l'échelle planétaire.
+    - Quel a été l'impact réel de la campagne de vaccination mondiale sur la mortalité.
+    - Quel est le lien crucial entre la capacité de dépistage d'un pays et le bilan humain.
     
     ### 📖 Sommaire (Navigation dans la barre latérale)
-    1. **🌍 Comparaison Pays** : Analysez et comparez les stratégies et les impacts entre différentes nations.
-    2. **📅 Analyse Temporelle** : Plongez dans la chronologie de la pandémie pour observer la saisonnalité et l'impact de la vaccination.
-    3. **🇲🇦 Focus Maroc** : Une analyse exclusive dédiée à la gestion de la pandémie au Maroc.
+    1. **🌍 Comparaison Pays** : Analysez et comparez les stratégies et les impacts entre différentes nations (Heatmaps, Tendances).
+    2. **📅 Analyse Temporelle** : Plongez dans la chronologie de la pandémie pour un pays donné (Saisonnalité, Lissage, Time-lag).
+    3. **🏆 Bilan et Classements** : Découvrez le classement des pays les plus touchés et une macro-analyse globale Vaccination vs Mortalité.
+    4. **🧪 Dynamique de Dépistage** : Comprenez pourquoi le taux de positivité a été l'indicateur d'alerte numéro 1 durant la pandémie.
     
     ---
     """)
