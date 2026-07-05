@@ -16,15 +16,19 @@ logging.basicConfig(level=logging.INFO)
 
 
 def create_spark_session():
-    app_name = os.getenv("SPARK_APP_NAME", "CovidDataAnalysis")
-    minio_endpoint = os.getenv("MINIO_ENDPOINT", "http://localhost:9000")
-    minio_access_key = os.getenv("MINIO_ROOT_USER", "minioadmin")
-    minio_secret_key = os.getenv("MINIO_ROOT_PASSWORD", "minioadmin")
+    from src.common.utils import load_env
+    env = load_env()
+
+    app_name = env["SPARK_APP_NAME"]
+    minio_endpoint = f"http://{env['MINIO_HOST']}:{env['MINIO_PORT']}"
+    minio_access_key = env["MINIO_ROOT_USER"]
+    minio_secret_key = env["MINIO_ROOT_PASSWORD"]
 
     try:
         spark = (
             SparkSession.builder
             .appName(app_name)
+            .master("local[1]")
             .config("spark.hadoop.fs.s3a.endpoint", minio_endpoint)
             .config("spark.hadoop.fs.s3a.access.key", minio_access_key)
             .config("spark.hadoop.fs.s3a.secret.key", minio_secret_key)

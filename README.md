@@ -1,90 +1,121 @@
-# Covid Data Analysis with Spark & MinIO
+# Covid-19 Data Analysis Pipeline
 
-Ce projet est une structure d'initiation pour apprendre à développer une application de traitement de données avec Apache Spark et MinIO. Il fournit une base propre pour démarrer, avec des scripts Python, des notebooks Jupyter et une configuration Docker.
+Bienvenue dans le projet **Covid-19 Data Analysis**. Ce projet propose une architecture robuste de traitement de données (Big Data) basée sur PySpark et MinIO. Il extrait les données liées au Covid-19 depuis *Our World in Data (OWID)* et les traite selon l'architecture **Medallion** (Bronze → Silver → Gold).
 
-## Objectif
+## Architecture des Données (Medallion)
 
-- Comprendre comment configurer un environnement de traitement de données local.
-- Utiliser Spark pour charger, transformer et analyser des données.
-- Utiliser MinIO comme stockage d'objets compatible S3.
-- Disposer d'une architecture simple et évolutive pour un projet Big Data.
+Voici le flux de données de l'ingestion à la sortie (prêt pour l'analyse) :
 
-## Prérequis
+```mermaid
+graph TD
+    %% Couleurs et Styles
+    classDef external fill:#f9f9f9,stroke:#333,stroke-width:2px;
+    classDef bronze fill:#cd7f32,stroke:#333,stroke-width:2px,color:#fff;
+    classDef silver fill:#c0c0c0,stroke:#333,stroke-width:2px;
+    classDef gold fill:#ffd700,stroke:#333,stroke-width:2px;
+    classDef process fill:#3498db,stroke:#333,stroke-width:2px,color:#fff;
 
-- Python 3.11 ou plus récent
-- Docker et Docker Compose installés
-- Un terminal Linux ou macOS (ou WSL sous Windows)
+    %% Nœuds
+    OWID[(Source Externe: OWID CSV)]:::external
+    
+    subgraph Ingestion ["Ingestion (src/ingestion/)"]
+        IngestProcess[ingest_data.py & prepare_owid_data.py]:::process
+    end
 
-## Mise en place
+    subgraph MinIO_Data_Lake ["Data Lake (MinIO)"]
+        Bronze[(Bronze Layer<br>Raw CSVs)]:::bronze
+        Silver[(Silver Layer<br>Cleaned Parquet)]:::silver
+        Gold[(Gold Layer<br>Aggregated Parquet)]:::gold
+    end
 
-1. Copier le modèle d'environnement :
-   ```bash
-   cp .env-example .env
-   ```
+    subgraph Transformation ["Transformation (src/transformation/)"]
+        SilverProcess[process_data.py]:::process
+        GoldProcess[aggregate_data.py]:::process
+    end
 
-2. Créer un environnement virtuel Python :
-   ```bash
-   python3 -m venv .venv
-   source .venv/bin/activate
-   ```
+    subgraph Analysis ["Analyse & Reporting"]
+        Dashboards[Jupyter / Dashboards]:::external
+    end
 
-3. Mettre pip à jour et installer les dépendances :
-   ```bash
-   pip install --upgrade pip
-   pip install -r requirements.txt
-   ```
-
-## Lancer l'infrastructure Docker
-
-Le projet contient une configuration Docker Compose pour démarrer Spark et MinIO.
-
-```bash
-cd docker
-docker compose up -d
+    %% Flux
+    OWID --> IngestProcess
+    IngestProcess -->|Sépare par domaine| Bronze
+    
+    Bronze --> SilverProcess
+    SilverProcess -->|Nettoyage, Validation, Déduplication| Silver
+    
+    Silver --> GoldProcess
+    GoldProcess -->|Agrégation Temporelle & Géographique| Gold
+    
+    Gold --> Dashboards
 ```
 
-### Vérifier les services
+## Prérequis Techniques
 
-- Spark Master UI : http://localhost:8080
-- Spark Worker UI : http://localhost:8081
-- MinIO Console : http://localhost:9001
+Pour exécuter ce pipeline, vous devez disposer des éléments suivants :
+- **Python 3.9+**
+- **Java 11** (requis pour PySpark)
+- **MinIO** ou un serveur compatible S3 en cours de fonctionnement (peut être lancé via Docker).
 
-## Utilisation
+## Installation
 
-### Exécuter le script principal
-
-Ce script lance une session Spark et exécute un exemple d'ingestion et de traitement.
-
-```bash
-python scripts/main.py
-```
-
-### Explorer avec Jupyter
-
-Ouvrez le notebook de démarrage :
+Le projet utilise une architecture packagée propre. Installez le projet et ses dépendances en mode éditable avec `pip` :
 
 ```bash
-jupyter lab
+git clone <votre-repo>
+cd covid_data_analysis
+pip install -e .
 ```
 
-Puis ouvrez `notebooks/00-data-exploration.ipynb`.
+## Configuration
 
-## Structure du projet
+Renommez le fichier `.env-example` en `.env` (ou créez-en un) et configurez les variables nécessaires :
 
-- `scripts/` : code Python principal
-  - `main.py` : point d'entrée pour exécuter le pipeline
-  - `ingest_data.py` : fonction d'ingestion des données
-  - `process_data.py` : logique de traitement
-  - `utils.py` : fonctions utilitaires et chargement des variables d'environnement
-- `notebooks/` : notebooks Jupyter pour l'exploration
-- `docker/` : configuration Docker Compose et conteneurs
-- `requirements.txt` : dépendances Python
-- `.env-example` : modèle de configuration
-- `.gitignore` : fichiers à ignorer dans Git
+```env
+# MinIO Configuration
+MINIO_ROOT_USER=minioadmin
+MINIO_ROOT_PASSWORD=minioadmin
+MINIO_HOST=localhost
+MINIO_PORT=9000
 
-## Arrêter les services
+# Buckets
+MINIO_BUCKET_BRONZE=bronze
+MINIO_BUCKET_SILVER=silver
+MINIO_BUCKET_GOLD=gold
+
+# Spark Configuration
+SPARK_APP_NAME="COVID-19 Analysis"
+
+# Source de données
+COVID_DATA_URL="https://covid.ourworldindata.org/data/owid-covid-data.csv"
+```
+
+## Exécution du Pipeline
+
+Le pipeline complet peut être lancé via un seul script orchestrateur qui s'assure de l'ingestion, du nettoyage et de l'agrégation de toutes les données :
 
 ```bash
-cd docker
-docker compose down
+python -m src.pipeline.run_pipeline
 ```
+
+Vous pouvez également vérifier que l'architecture du projet et toutes les fonctions requises sont intactes en lançant :
+
+```bash
+python -m src.pipeline.validate_pipeline
+```
+
+## 📈 Exploration et Visualisation (Dashboard Streamlit)
+
+Une fois les données agrégées dans la couche Gold, vous pouvez explorer les résultats via un Dashboard interactif développé en Streamlit. Ce dashboard raconte l'histoire de la pandémie avec un focus particulier sur le Maroc.
+
+Pour lancer le dashboard :
+```bash
+# S'assurer d'avoir installé les dépendances (pip install -r requirements.txt)
+streamlit run streamlit_app/app.py
+```
+Le dashboard s'ouvrira automatiquement dans votre navigateur (par défaut sur `http://localhost:8501`).
+
+## Contribution
+
+Nous encourageons les contributions (ajout de nouvelles sources de données, de nouvelles transformations, etc.).
+Veuillez consulter le fichier [CONTRIBUTING.md](CONTRIBUTING.md) pour prendre connaissance de nos directives, de la structure du code et des règles de formatage (Black/Flake8).
