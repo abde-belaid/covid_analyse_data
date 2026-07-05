@@ -3,11 +3,7 @@ import sys
 from pathlib import Path
 from minio import Minio
 
-ROOT_DIR = Path(__file__).resolve().parent.parent
-if str(ROOT_DIR) not in sys.path:
-    sys.path.insert(0, str(ROOT_DIR))
-
-from scripts.utils import load_env
+from src.common.utils import load_env
 
 
 def _build_minio_client(env):

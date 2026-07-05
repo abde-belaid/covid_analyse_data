@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 def create_spark_session():
-    from scripts.utils import load_env
+    from src.common.utils import load_env
     env = load_env()
 
     app_name = env["SPARK_APP_NAME"]

@@ -6,12 +6,8 @@ from pyspark.sql.functions import (
     min as spark_min, avg, sum as spark_sum, count, stddev, percentile_approx, lit
 )
 
-ROOT_DIR = Path(__file__).resolve().parent.parent
-if str(ROOT_DIR) not in sys.path:
-    sys.path.insert(0, str(ROOT_DIR))
-
-from scripts.spark.spark_config import create_spark_session
-from scripts.utils import load_env
+from src.common.spark_config import create_spark_session
+from src.common.utils import load_env
 
 # ==================== HELPER FUNCTIONS FOR AGGREGATION ====================
 
@@ -74,6 +70,13 @@ def helper_read_parquet(spark, path):
 def aggregate_vaccination_monthly(spark, env):
     """
     Create monthly vaccination summary with comprehensive metrics.
+    
+    Args:
+        spark (pyspark.sql.SparkSession): Active Spark session.
+        env (dict): Environment variables.
+        
+    Returns:
+        pyspark.sql.DataFrame: Aggregated monthly data.
     """
     print("\n--- Aggregating Vaccination Data (Monthly) ---")
     
@@ -118,6 +121,13 @@ def aggregate_vaccination_monthly(spark, env):
 def aggregate_vaccination_by_location(spark, env):
     """
     Create overall vaccination summary by location (country-level).
+    
+    Args:
+        spark (pyspark.sql.SparkSession): Active Spark session.
+        env (dict): Environment variables.
+        
+    Returns:
+        pyspark.sql.DataFrame: Aggregated data by location.
     """
     print("\n--- Aggregating Vaccination Data (By Location) ---")
     

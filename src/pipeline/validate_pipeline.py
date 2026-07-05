@@ -34,8 +34,8 @@ def validate_structure():
     print("PIPELINE STRUCTURE VALIDATION")
     print("="*70)
     
-    base_path = "/home/belaid-abderrahim/Bureau/Master/S2/Big Data/tps/covid_data_analysis"
-    scripts_path = os.path.join(base_path, "scripts")
+    base_path = os.environ.get("PROJECT_ROOT", str(Path(__file__).resolve().parents[2]))
+    src_path = os.path.join(base_path, "src")
     
     all_checks_pass = True
     
@@ -44,11 +44,11 @@ def validate_structure():
     print("-" * 70)
     
     files_to_check = {
-        os.path.join(scripts_path, "process_data.py"): "process_data.py (Bronze → Silver)",
-        os.path.join(scripts_path, "aggregate_data.py"): "aggregate_data.py (Silver → Gold)",
-        os.path.join(scripts_path, "run_pipeline.py"): "run_pipeline.py (Orchestrator)",
-        os.path.join(scripts_path, "prepare_owid_data.py"): "prepare_owid_data.py (OWID Preparation)",
-        os.path.join(scripts_path, "analysis_examples.py"): "analysis_examples.py (Analysis Examples)",
+        os.path.join(src_path, "transformation", "process_data.py"): "process_data.py (Bronze → Silver)",
+        os.path.join(src_path, "transformation", "aggregate_data.py"): "aggregate_data.py (Silver → Gold)",
+        os.path.join(src_path, "pipeline", "run_pipeline.py"): "run_pipeline.py (Orchestrator)",
+        os.path.join(src_path, "ingestion", "prepare_owid_data.py"): "prepare_owid_data.py (OWID Preparation)",
+        os.path.join(src_path, "pipeline", "analysis_examples.py"): "analysis_examples.py (Analysis Examples)",
     }
     
     for filepath, name in files_to_check.items():
@@ -74,7 +74,7 @@ def validate_structure():
     print("\n[3] Checking Helper Functions (process_data.py):")
     print("-" * 70)
     
-    process_file = os.path.join(scripts_path, "process_data.py")
+    process_file = os.path.join(src_path, "transformation", "process_data.py")
     
     helpers_to_check = [
         "helper_read_csv",
@@ -117,7 +117,7 @@ def validate_structure():
     print("\n[5] Checking Helper Functions (aggregate_data.py):")
     print("-" * 70)
     
-    aggregate_file = os.path.join(scripts_path, "aggregate_data.py")
+    aggregate_file = os.path.join(src_path, "transformation", "aggregate_data.py")
     
     agg_helpers = [
         "helper_add_time_dimensions",

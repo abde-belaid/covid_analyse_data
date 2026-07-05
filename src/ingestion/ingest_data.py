@@ -7,18 +7,14 @@ from urllib.error import URLError, HTTPError
 import pandas as pd
 from minio import Minio
 
-ROOT_DIR = Path(__file__).resolve().parent.parent
-if str(ROOT_DIR) not in sys.path:
-    sys.path.insert(0, str(ROOT_DIR))
-
-from scripts.minio_utils import create_buckets
-from scripts.prepare_owid_data import (
+from src.common.minio_utils import create_buckets
+from src.ingestion.prepare_owid_data import (
     extract_vaccination_data,
     extract_mortality_data,
     extract_testing_data,
     extract_cases_data,
 )
-from scripts.utils import load_env
+from src.common.utils import load_env
 
 def _build_minio_client(env):
     endpoint = env.get("MINIO_ENDPOINT")

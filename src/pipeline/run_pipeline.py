@@ -1,14 +1,10 @@
 import sys
 from pathlib import Path
 
-ROOT_DIR = Path(__file__).resolve().parent.parent
-if str(ROOT_DIR) not in sys.path:
-    sys.path.insert(0, str(ROOT_DIR))
-
-from scripts.minio_utils import create_buckets
-from scripts.ingest_data import ingest_bronze_data
-from scripts.process_data import run_bronze_to_silver_pipeline
-from scripts.aggregate_data import run_silver_to_gold_pipeline
+from src.common.minio_utils import create_buckets
+from src.ingestion.ingest_data import ingest_bronze_data
+from src.transformation.process_data import run_bronze_to_silver_pipeline
+from src.transformation.aggregate_data import run_silver_to_gold_pipeline
 
 def main():
     """

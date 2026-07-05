@@ -7,12 +7,8 @@ from pyspark.sql.functions import (
 )
 from pyspark.sql.types import StructType, StructField, StringType, DoubleType, DateType
 
-ROOT_DIR = Path(__file__).resolve().parent.parent
-if str(ROOT_DIR) not in sys.path:
-    sys.path.insert(0, str(ROOT_DIR))
-
-from scripts.spark.spark_config import create_spark_session
-from scripts.utils import load_env
+from src.common.spark_config import create_spark_session
+from src.common.utils import load_env
 
 # ==================== GENERIC HELPER FUNCTIONS ====================
 
@@ -141,8 +137,12 @@ def helper_log_data_quality(df, dataset_name):
 def clean_vaccination_data(df):
     """
     Rigorous cleaning of vaccination data with proper validation and deduplication.
-    Expected columns: iso_code, location, date, total_vaccinations, 
-                      people_vaccinated, people_fully_vaccinated, people_boosted
+    
+    Args:
+        df (pyspark.sql.DataFrame): Raw vaccination data.
+        
+    Returns:
+        pyspark.sql.DataFrame: Cleaned vaccination data with deduplication and null-handling.
     """
     print("\n--- Processing Vaccination Data ---")
     
@@ -368,7 +368,7 @@ def process_bronze_to_silver(spark, env):
     
     return cleaned_datasets
 
-from scripts.aggregate_data import run_silver_to_gold_pipeline
+from src.transformation.aggregate_data import run_silver_to_gold_pipeline
 
 
 def run_bronze_to_silver_pipeline():

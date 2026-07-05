@@ -6,15 +6,7 @@ Shows how to leverage the fully processed datasets for insights.
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, max, min, avg, sum as spark_sum
 
-def create_spark_session():
-    """Create Spark session with S3 configuration."""
-    return SparkSession.builder \
-        .appName("COVID-19 Analysis") \
-        .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
-        .config("spark.hadoop.fs.s3a.access.key", "minioadmin") \
-        .config("spark.hadoop.fs.s3a.secret.key", "minioadmin") \
-        .config("spark.hadoop.fs.s3a.path.style.access", "true") \
-        .getOrCreate()
+from src.common.spark_config import create_spark_session
 
 def example_1_vaccination_trends(spark):
     """
