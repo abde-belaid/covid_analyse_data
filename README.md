@@ -104,6 +104,17 @@ Vous pouvez également vérifier que l'architecture du projet et toutes les fonc
 python -m src.pipeline.validate_pipeline
 ```
 
+## 📈 Exploration et Visualisation (Dashboard Streamlit)
+
+Une fois les données agrégées dans la couche Gold, vous pouvez explorer les résultats via un Dashboard interactif développé en Streamlit. Ce dashboard raconte l'histoire de la pandémie avec un focus particulier sur le Maroc.
+
+Pour lancer le dashboard :
+```bash
+# S'assurer d'avoir installé les dépendances (pip install -r requirements.txt)
+streamlit run streamlit_app/app.py
+```
+Le dashboard s'ouvrira automatiquement dans votre navigateur (par défaut sur `http://localhost:8501`).
+
 ## Contribution
 
 Nous encourageons les contributions (ajout de nouvelles sources de données, de nouvelles transformations, etc.).
